@@ -1,4 +1,4 @@
-# Laundry Catchers — static SPA served from laundry-catcher.youngmomins.com
+# Laundry Catchers — static SPA served from laundrycatcher.youngmomins.com
 #
 # Deployed by rsync from dist/. Everything in public/ is copied into dist/ by
 # Vite at build time, so this file ends up at the docroot root.
@@ -7,10 +7,10 @@ RewriteEngine On
 
 # Force HTTPS — DISABLED until this subdomain has a certificate.
 #
-# The cPanel account has no AutoSSL feature and the installed Sectigo certs
-# cover only youngmomins.com and www.youngmomins.com, so
-# laundry-catcher.youngmomins.com currently has no valid cert. Redirecting to
-# HTTPS would send every visitor into a certificate warning.
+# The installed Sectigo certs cover only youngmomins.com and www (no
+# wildcard), and the account cannot trigger AutoSSL itself, so
+# laundrycatcher.youngmomins.com has no valid cert yet. Redirecting to HTTPS
+# would send every visitor into a certificate warning.
 #
 # Uncomment these three lines the moment a cert covering this subdomain is
 # installed. See docs/DEPLOYMENT.md ("HTTPS").

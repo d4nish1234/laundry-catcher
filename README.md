@@ -9,7 +9,7 @@ laundry cards.
 location it introduces opens, so the educational content is on the critical path
 rather than optional.
 
-Live at **https://laundry-catcher.youngmomins.com**
+Live at **https://laundrycatcher.youngmomins.com**
 
 ## Stack
 

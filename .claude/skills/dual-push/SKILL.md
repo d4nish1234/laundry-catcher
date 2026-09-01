@@ -1,6 +1,6 @@
 ---
 name: dual-push
-description: Push laundry-catcher commits to BOTH GitHub and Namecheap cPanel git, which triggers deployment to laundry-catcher.youngmomins.com. Use whenever asked to push, publish, deploy, or ship changes in this repo — and to diagnose a push that hangs asking for a password, or a deploy that appears to succeed but doesn't change the live site.
+description: Push laundry-catcher commits to BOTH GitHub and Namecheap cPanel git, which triggers deployment to laundrycatcher.youngmomins.com. Use whenever asked to push, publish, deploy, or ship changes in this repo — and to diagnose a push that hangs asking for a password, or a deploy that appears to succeed but doesn't change the live site.
 ---
 
 # Dual push: GitHub + Namecheap (deploys the live site)
@@ -10,7 +10,7 @@ This repo has **two** upstreams. Pushing to only one is the most common mistake 
 | Remote | Points at | Effect of pushing |
 |---|---|---|
 | `origin` | GitHub `d4nish1234/laundry-catcher` | Source of record. **No deploy.** |
-| `namecheap` | cPanel `~/repos/laundry-catcher` | **Deploys to laundry-catcher.youngmomins.com** via `.cpanel.yml` |
+| `namecheap` | cPanel `~/repos/laundry-catcher` | **Deploys to laundrycatcher.youngmomins.com** via `.cpanel.yml` |
 | `both` | Both of the above | Pushes to both in one command |
 
 ## Rebuild first — this repo ships a build artifact
@@ -69,7 +69,7 @@ ssh twostrategy.com 'git -C ~/repos/laundry-catcher log --oneline -1'
 ssh twostrategy.com 'tail -30 ~/repos/laundry-catcher/.git/.cpanel_deployment_log'
 
 # The live site, cache-busted
-curl -sS -o /dev/null -w '%{http_code}\n' "https://laundry-catcher.youngmomins.com/?cb=$RANDOM"
+curl -sS -o /dev/null -w '%{http_code}\n' "https://laundrycatcher.youngmomins.com/?cb=$RANDOM"
 ```
 
 ## Troubleshooting
@@ -94,7 +94,7 @@ cPanel can't see a valid `.cpanel.yml` at the repo root.
 **A deep link 404s but `/` works.**
 The SPA fallback lives in `public/.htaccess`, which Vite copies into `dist/`.
 Confirm it actually reached the docroot:
-`ssh twostrategy.com 'head -5 ~/laundry-catcher.youngmomins.com/.htaccess'`
+`ssh twostrategy.com 'head -5 ~/laundrycatcher.youngmomins.com/.htaccess'`
 
 **Trigger a deploy manually** (without a new commit):
 

@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DOCROOT=/home/quragkwh/laundry-catcher.youngmomins.com
+    - export DOCROOT=/home/quragkwh/laundrycatcher.youngmomins.com
     - export SRC=/home/quragkwh/repos/laundry-catcher/dist
     - /bin/mkdir -p $DOCROOT
     - /usr/bin/rsync -rlpt --delete --chmod=D755,F644 --exclude=/.well-known/ --exclude=/cgi-bin/ --exclude=/.ssl-manager/ --exclude=/error_log --exclude=/.htaccess.bk $SRC/ $DOCROOT/

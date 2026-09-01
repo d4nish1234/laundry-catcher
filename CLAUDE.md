@@ -1,4 +1,4 @@
-# laundry-catcher (laundry-catcher.youngmomins.com)
+# laundry-catcher (laundrycatcher.youngmomins.com)
 
 **Laundry Catchers: Journey to Umrah** — React 19 + Vite 7 + Tailwind v4 single-page
 game. `dist/` is committed to git and deployed as-is; there is no server-side build.

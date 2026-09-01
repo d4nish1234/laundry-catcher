@@ -1,4 +1,4 @@
-# Deployment: how laundry-catcher.youngmomins.com goes live
+# Deployment: how laundrycatcher.youngmomins.com goes live
 
 ## The pipeline
 
@@ -20,7 +20,7 @@
                               │
                               │  reads .cpanel.yml at the repo root
                               ▼
-             rsync --delete dist/ ──► ~/laundry-catcher.youngmomins.com/
+             rsync --delete dist/ ──► ~/laundrycatcher.youngmomins.com/
                                         (the live docroot)
 ```
 
@@ -50,7 +50,7 @@ every deployment and runs the `tasks:` list as a shell script.
 ---
 deployment:
   tasks:
-    - export DOCROOT=/home/quragkwh/laundry-catcher.youngmomins.com
+    - export DOCROOT=/home/quragkwh/laundrycatcher.youngmomins.com
     - export SRC=/home/quragkwh/repos/laundry-catcher/dist
     - /bin/mkdir -p $DOCROOT
     - /usr/bin/rsync -rlpt --delete --chmod=D755,F644 --exclude=/.well-known/ ... $SRC/ $DOCROOT/
@@ -172,7 +172,7 @@ ssh twostrategy.com 'tail -30 ~/repos/laundry-catcher/.git/.cpanel_deployment_lo
 # Live site + a deep link (proves the SPA fallback survived the deploy)
 for p in "" "locations" "dex"; do
   printf '%-14s ' "/$p"
-  curl -sS -o /dev/null -w '%{http_code}\n' "https://laundry-catcher.youngmomins.com/$p"
+  curl -sS -o /dev/null -w '%{http_code}\n' "https://laundrycatcher.youngmomins.com/$p"
 done
 ```
 
@@ -186,32 +186,45 @@ git push both main
 
 Do not restore files onto the server by hand — the next deploy overwrites them.
 
-## HTTPS — currently unresolved
+## HTTPS — pending
 
-`laundry-catcher.youngmomins.com` is served over **plain HTTP**. The HTTPS
-redirect in `public/.htaccess` is deliberately commented out, and the canonical
-/ `og:url` in `index.html` point at `http://`.
+`laundrycatcher.youngmomins.com` is currently served over **plain HTTP**. The
+HTTPS redirect in `public/.htaccess` is commented out and the canonical /
+`og:url` in `index.html` point at `http://`, so visitors are not sent into a
+browser certificate warning.
 
-Why: this cPanel account does not have the `autossl` feature
-(`uapi SSL start_autossl_check` returns *"You do not have the feature 'autossl'"*),
-and the installed Sectigo certificates cover only the apex domains and `www`:
+### What is actually going on
+
+The installed Sectigo certificates cover only the apex domains and `www` — there
+is no wildcard:
 
 ```
 youngmomins.com, www.youngmomins.com          (Sectigo)
 twostrategy.com, www.twostrategy.com          (Sectigo)
 ```
 
-No wildcard, so the new subdomain has no valid certificate. Redirecting to HTTPS
-before fixing that sends every visitor into a browser certificate warning.
+The account also cannot trigger AutoSSL itself — `uapi SSL start_autossl_check`
+returns *"You do not have the feature 'autossl'"*. That flag governs the
+user-facing control, not necessarily whether the host runs AutoSSL on its own
+schedule, so a cert for a newly created subdomain may still appear on its own
+(allow a few hours).
 
-Check the current state with:
+Note that **the subdomain name has nothing to do with it.** Both
+`laundry-catcher.youngmomins.com` and `laundrycatcher.youngmomins.com` were
+created the same way and neither was issued a certificate; a hyphen is not what
+makes a subdomain SSL-eligible.
+
+### Check whether a cert has arrived
 
 ```bash
-ssh twostrategy.com '/usr/bin/uapi SSL installed_hosts' | grep -A3 domains
-curl -sS -o /dev/null -w '%{http_code}\n' https://laundry-catcher.youngmomins.com/
+ssh twostrategy.com '/usr/bin/uapi SSL installed_hosts' | grep -B2 laundrycatcher
+curl -sS -o /dev/null -w '%{http_code}\n' https://laundrycatcher.youngmomins.com/
 ```
 
-### Ways out, roughly in order of preference
+A `200` from the second command means it is done. Until then curl reports
+*"no alternative certificate subject name matches target host name"*.
+
+### If it never arrives
 
 1. **Ask Namecheap support to enable AutoSSL** on the hosting package. Free,
    auto-renewing, and it would cover every current and future subdomain. This is
@@ -222,11 +235,11 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://laundry-catcher.youngmomins.co
    then `uapi SSL install_ssl`). Works, but there is no root cron here, so
    renewal every 60 days has to be scheduled deliberately or the site breaks.
 4. **Buy a wildcard cert for `*.youngmomins.com`** and install it in cPanel.
-5. **Serve the game from `youngmomins.com/laundry-catcher/` instead**, which the
-   existing cert already covers. This needs a `--exclude=/laundry-catcher/` added
+5. **Serve the game from `youngmomins.com/laundrycatcher/` instead**, which the
+   existing cert already covers. This needs a `--exclude=/laundrycatcher/` added
    to the `young-momins-www` `.cpanel.yml`, or its `rsync --delete` will wipe the
    directory on that repo's next deploy. It also means rebuilding with
-   `BASE_PATH=/laundry-catcher/` and fixing the hardcoded `/audio/...` paths in
+   `BASE_PATH=/laundrycatcher/` and fixing the hardcoded `/audio/...` paths in
    `catch.tsx`, `song.tsx`, `credits.tsx` and `settings.tsx`.
 
 ### Once a certificate is in place
