@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="A stylised hotel courtyard of striped stone arches">
+  <defs>
+    <linearGradient id="c-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7fb3d8"/><stop offset="60%" stop-color="#cfe0e8"/>
+      <stop offset="100%" stop-color="#f3e8d4"/>
+    </linearGradient>
+    <pattern id="g-stripe" width="20" height="40" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#ffffff"/>
+    </pattern>
+    <pattern id="c-band" width="1200" height="52" patternUnits="userSpaceOnUse">
+      <rect width="1200" height="26" fill="#e6d9bf"/>
+      <rect y="26" width="1200" height="26" fill="#b9a888"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#c-sky)"/>
+  <circle cx="215" cy="140" r="34" fill="#ffffff" opacity="0.5"/>
+  <circle cx="258" cy="150" r="46" fill="#ffffff" opacity="0.45"/>
+  <circle cx="905" cy="112" r="40" fill="#ffffff" opacity="0.38"/>
+
+  <!-- upper facade in banded ablaq stone -->
+  <rect x="90" y="120" width="1020" height="300" fill="url(#c-band)"/>
+  <rect x="90" y="120" width="1020" height="18" fill="#8e7f63"/>
+  <g>
+    <rect x="150" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="150" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="246" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="246" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="342" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="342" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="438" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="438" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="534" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="534" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="630" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="630" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="726" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="726" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="822" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="822" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="918" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="918" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="1014" y="178" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+    <rect x="1014" y="280" width="60" height="62" rx="2" fill="#6f6247" opacity="0.5"/>
+  </g>
+  <g fill="#cbbb99">
+    <rect x="150" y="178" width="60" height="8"/><rect x="246" y="178" width="60" height="8"/><rect x="342" y="178" width="60" height="8"/><rect x="438" y="178" width="60" height="8"/><rect x="534" y="178" width="60" height="8"/><rect x="630" y="178" width="60" height="8"/><rect x="726" y="178" width="60" height="8"/><rect x="822" y="178" width="60" height="8"/><rect x="918" y="178" width="60" height="8"/><rect x="1014" y="178" width="60" height="8"/>
+  </g>
+
+  <!-- arcade -->
+  <rect x="90" y="410" width="1020" height="24" fill="#8e7f63"/>
+  <g transform="translate(172,0)"><path d="M0 620 V 430 a72 72 0 0 1 144 0 V 620 Z" fill="#efe6d3"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="#3f3226" opacity="0.82"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="url(#g-stripe)" opacity="0.25"/></g><g transform="translate(356,0)"><path d="M0 620 V 430 a72 72 0 0 1 144 0 V 620 Z" fill="#efe6d3"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="#3f3226" opacity="0.82"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="url(#g-stripe)" opacity="0.25"/></g><g transform="translate(540,0)"><path d="M0 620 V 430 a72 72 0 0 1 144 0 V 620 Z" fill="#efe6d3"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="#3f3226" opacity="0.82"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="url(#g-stripe)" opacity="0.25"/></g><g transform="translate(724,0)"><path d="M0 620 V 430 a72 72 0 0 1 144 0 V 620 Z" fill="#efe6d3"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="#3f3226" opacity="0.82"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="url(#g-stripe)" opacity="0.25"/></g><g transform="translate(908,0)"><path d="M0 620 V 430 a72 72 0 0 1 144 0 V 620 Z" fill="#efe6d3"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="#3f3226" opacity="0.82"/><path d="M14 620 V 434 a58 58 0 0 1 116 0 V 620 Z" fill="url(#g-stripe)" opacity="0.25"/></g>
+  <rect x="0" y="612" width="1200" height="188" fill="#d9cbb0"/>
+  <rect x="0" y="612" width="1200" height="10" fill="#a8977a"/>
+  <g stroke="#c2b193" stroke-width="3" opacity="0.8">
+    <line x1="100" y1="640" x2="100" y2="800"/><line x1="200" y1="640" x2="200" y2="800"/><line x1="300" y1="640" x2="300" y2="800"/><line x1="400" y1="640" x2="400" y2="800"/><line x1="500" y1="640" x2="500" y2="800"/><line x1="600" y1="640" x2="600" y2="800"/><line x1="700" y1="640" x2="700" y2="800"/><line x1="800" y1="640" x2="800" y2="800"/><line x1="900" y1="640" x2="900" y2="800"/><line x1="1000" y1="640" x2="1000" y2="800"/><line x1="1100" y1="640" x2="1100" y2="800"/>
+    <line x1="0" y1="700" x2="1200" y2="700"/>
+  </g>
+
+  <!-- linen on a line -->
+  <g>
+    <line x1="120" y1="330" x2="440" y2="352" stroke="#8e7f63" stroke-width="3"/>
+    <path d="M160 336 q 26 46 -4 74 q 32 10 44 -6 q -6 -44 -6 -66 z" fill="#fdfdfb" opacity="0.95"/>
+    <path d="M250 342 q 22 50 -8 78 q 34 8 46 -10 q -8 -42 -6 -66 z" fill="#eef4f8" opacity="0.95"/>
+    <path d="M344 348 q 24 44 -6 72 q 32 10 44 -8 q -6 -40 -4 -62 z" fill="#fbf3e4" opacity="0.95"/>
+  </g>
+
+  <g>
+      <rect x="538" y="284" width="124" height="78" rx="6" fill="#f8f2e2" stroke="#a8977a" stroke-width="2"/>
+      <text x="600" y="312" font-family="Georgia, 'Times New Roman', serif" font-size="19" letter-spacing="4.5" text-anchor="middle" fill="#3f3226">HOTEL</text>
+      <line x1="556" y1="321" x2="644" y2="321" stroke="#3f3226" stroke-width="1" opacity="0.35"/>
+      <path d="M558 332 l3.2 6.5 7.2 1-5.2 5.1 1.2 7.2-6.4-3.4-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#3f3226" opacity="0.85"/><path d="M579 332 l3.2 6.5 7.2 1-5.2 5.1 1.2 7.2-6.4-3.4-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#3f3226" opacity="0.85"/><path d="M600 332 l3.2 6.5 7.2 1-5.2 5.1 1.2 7.2-6.4-3.4-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#3f3226" opacity="0.85"/><path d="M621 332 l3.2 6.5 7.2 1-5.2 5.1 1.2 7.2-6.4-3.4-6.4 3.4 1.2-7.2-5.2-5.1 7.2-1z" fill="#3f3226" opacity="0.85"/>
+    </g>
+</svg>
