@@ -134,8 +134,13 @@ export function StoryScene({ event, onComplete, onExit }: StorySceneProps) {
   const speakingCharId = step?.characterId ?? null;
 
   return (
+    /* The overlay is fixed to the viewport, but the scene inside it has to
+       match the max-w-md app shell in layout.tsx. Without the inner column the
+       characters anchor to the window edges on any desktop-width browser and
+       drift far away from the dialogue. */
+    <div className="fixed inset-0 z-50 flex justify-center bg-black">
     <div
-      className="fixed inset-0 z-50 flex flex-col select-none overflow-hidden"
+      className="relative w-full max-w-md h-full flex flex-col select-none overflow-hidden"
       style={
         event.backgroundImage
           ? { backgroundImage: `url(${event.backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
@@ -260,6 +265,7 @@ export function StoryScene({ event, onComplete, onExit }: StorySceneProps) {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }

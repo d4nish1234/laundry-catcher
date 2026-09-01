@@ -45,8 +45,13 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-col items-center p-6 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <div className="mb-2 inline-block transform -rotate-3 hover:rotate-3 transition-transform">
-          <h1 className="text-6xl md:text-7xl font-display font-bold tracking-tight text-white drop-shadow-[0_6px_0_rgba(0,0,0,0.8)]">
-            <span className="text-primary">Laundry</span><br className="sm:hidden" />Catchers
+          {/* The app shell is capped at max-w-md, but sm:/md: keys off the
+              VIEWPORT, not the shell. On any window wider than 640px the break
+              vanished and "Laundry" ran into "Catchers"; past 768px text-7xl
+              overflowed the 448px column. Break unconditionally and size for
+              the shell instead. */}
+          <h1 className="text-6xl font-display font-bold tracking-tight text-white drop-shadow-[0_6px_0_rgba(0,0,0,0.8)]">
+            <span className="text-primary">Laundry</span><br />Catchers
           </h1>
         </div>
 
