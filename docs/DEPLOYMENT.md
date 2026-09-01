@@ -186,64 +186,51 @@ git push both main
 
 Do not restore files onto the server by hand — the next deploy overwrites them.
 
-## HTTPS — pending
+## HTTPS
 
-`laundrycatcher.youngmomins.com` is currently served over **plain HTTP**. The
-HTTPS redirect in `public/.htaccess` is commented out and the canonical /
-`og:url` in `index.html` point at `http://`, so visitors are not sent into a
-browser certificate warning.
+The site is served over HTTPS and `public/.htaccess` 301-redirects any plain-HTTP
+request. The canonical and `og:url` tags in `index.html` point at `https://`.
 
-### What is actually going on
+Namecheap issued a DV certificate for `laundrycatcher.youngmomins.com` on
+2026-09-01 (SSL.com TLS Issuing RSA CA R1, valid to **2027-03-18**). It is
+*not* an AutoSSL cert — `installed_hosts` reports `is_autossl: 0` — so renewal is
+Namecheap's provisioning, not cPanel's AutoSSL cron.
 
-The installed Sectigo certificates cover only the apex domains and `www` — there
-is no wildcard:
+### Renewal is worth watching
 
-```
-youngmomins.com, www.youngmomins.com          (Sectigo)
-twostrategy.com, www.twostrategy.com          (Sectigo)
-```
-
-The account also cannot trigger AutoSSL itself — `uapi SSL start_autossl_check`
-returns *"You do not have the feature 'autossl'"*. That flag governs the
-user-facing control, not necessarily whether the host runs AutoSSL on its own
-schedule, so a cert for a newly created subdomain may still appear on its own
-(allow a few hours).
-
-Note that **the subdomain name has nothing to do with it.** Both
-`laundry-catcher.youngmomins.com` and `laundrycatcher.youngmomins.com` were
-created the same way and neither was issued a certificate; a hyphen is not what
-makes a subdomain SSL-eligible.
-
-### Check whether a cert has arrived
+Because this is not AutoSSL, do not assume it silently renews. Check occasionally,
+and definitely before March 2027:
 
 ```bash
-ssh twostrategy.com '/usr/bin/uapi SSL installed_hosts' | grep -B2 laundrycatcher
-curl -sS -o /dev/null -w '%{http_code}\n' https://laundrycatcher.youngmomins.com/
+ssh twostrategy.com '/usr/bin/uapi SSL installed_hosts' | grep -i laundrycatcher
+curl -sSv https://laundrycatcher.youngmomins.com/ 2>&1 | grep -E 'expire date|issuer:'
 ```
 
-A `200` from the second command means it is done. Until then curl reports
-*"no alternative certificate subject name matches target host name"*.
+If it ever lapses, the site breaks hard — the forced HTTPS redirect sends every
+visitor into a certificate warning with no way through. The emergency mitigation
+is to comment out these two lines in `public/.htaccess`, rebuild and push:
 
-### If it never arrives
+```apache
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+```
 
-1. **Ask Namecheap support to enable AutoSSL** on the hosting package. Free,
-   auto-renewing, and it would cover every current and future subdomain. This is
-   the cleanest fix.
-2. **Put Cloudflare in front of the subdomain** (proxied DNS). Free edge cert,
-   no server change — but it is a second place where DNS lives.
-3. **Issue a Let's Encrypt cert manually** (acme.sh HTTP-01 against the docroot,
-   then `uapi SSL install_ssl`). Works, but there is no root cron here, so
-   renewal every 60 days has to be scheduled deliberately or the site breaks.
-4. **Buy a wildcard cert for `*.youngmomins.com`** and install it in cPanel.
-5. **Serve the game from `youngmomins.com/laundrycatcher/` instead**, which the
-   existing cert already covers. This needs a `--exclude=/laundrycatcher/` added
-   to the `young-momins-www` `.cpanel.yml`, or its `rsync --delete` will wipe the
-   directory on that repo's next deploy. It also means rebuilding with
-   `BASE_PATH=/laundrycatcher/` and fixing the hardcoded `/audio/...` paths in
-   `catch.tsx`, `song.tsx`, `credits.tsx` and `settings.tsx`.
+### Background, for whoever hits this next
 
-### Once a certificate is in place
+This account **cannot trigger AutoSSL itself** — `uapi SSL start_autossl_check`
+returns *"You do not have the feature 'autossl'"* — and the other installed
+Sectigo certs cover only the apex domains plus `www`, with no wildcard. So a
+newly created subdomain starts with no certificate and needs one provisioned
+before HTTPS can be forced.
 
-1. Uncomment the three `RewriteCond`/`RewriteRule` HTTPS lines in `public/.htaccess`.
-2. Change the `<link rel="canonical">` and `og:url` in `index.html` back to `https://`.
-3. `npm run build && git add -A && git commit && git push both main`.
+The subdomain's *name* has nothing to do with it. Both
+`laundry-catcher.youngmomins.com` and `laundrycatcher.youngmomins.com` were
+created the same way; a hyphen is not what makes a subdomain SSL-eligible. What
+worked was simply waiting for Namecheap to provision a cert for the new
+subdomain.
+
+If a future subdomain does not get one, the options are: ask Namecheap support to
+enable AutoSSL on the package; proxy through Cloudflare; issue Let's Encrypt
+manually (acme.sh HTTP-01 + `uapi SSL install_ssl` — but there is no root cron
+here, so renewal must be scheduled deliberately); or buy a `*.youngmomins.com`
+wildcard.

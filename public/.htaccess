@@ -5,17 +5,10 @@
 
 RewriteEngine On
 
-# Force HTTPS — DISABLED until this subdomain has a certificate.
-#
-# The installed Sectigo certs cover only youngmomins.com and www (no
-# wildcard), and the account cannot trigger AutoSSL itself, so
-# laundrycatcher.youngmomins.com has no valid cert yet. Redirecting to HTTPS
-# would send every visitor into a certificate warning.
-#
-# Uncomment these three lines the moment a cert covering this subdomain is
-# installed. See docs/DEPLOYMENT.md ("HTTPS").
-# RewriteCond %{HTTPS} !=on
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+# Force HTTPS. Namecheap issued a DV cert (SSL.com) for this subdomain on
+# 2026-09-01, valid to 2027-03-18. See docs/DEPLOYMENT.md ("HTTPS").
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 # SPA fallback: wouter handles /locations, /dex, /story/:id, /catch/:id client
 # side. Anything that is not a real file or directory serves index.html so a
