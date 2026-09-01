@@ -185,3 +185,52 @@ git push both main
 ```
 
 Do not restore files onto the server by hand — the next deploy overwrites them.
+
+## HTTPS — currently unresolved
+
+`laundry-catcher.youngmomins.com` is served over **plain HTTP**. The HTTPS
+redirect in `public/.htaccess` is deliberately commented out, and the canonical
+/ `og:url` in `index.html` point at `http://`.
+
+Why: this cPanel account does not have the `autossl` feature
+(`uapi SSL start_autossl_check` returns *"You do not have the feature 'autossl'"*),
+and the installed Sectigo certificates cover only the apex domains and `www`:
+
+```
+youngmomins.com, www.youngmomins.com          (Sectigo)
+twostrategy.com, www.twostrategy.com          (Sectigo)
+```
+
+No wildcard, so the new subdomain has no valid certificate. Redirecting to HTTPS
+before fixing that sends every visitor into a browser certificate warning.
+
+Check the current state with:
+
+```bash
+ssh twostrategy.com '/usr/bin/uapi SSL installed_hosts' | grep -A3 domains
+curl -sS -o /dev/null -w '%{http_code}\n' https://laundry-catcher.youngmomins.com/
+```
+
+### Ways out, roughly in order of preference
+
+1. **Ask Namecheap support to enable AutoSSL** on the hosting package. Free,
+   auto-renewing, and it would cover every current and future subdomain. This is
+   the cleanest fix.
+2. **Put Cloudflare in front of the subdomain** (proxied DNS). Free edge cert,
+   no server change — but it is a second place where DNS lives.
+3. **Issue a Let's Encrypt cert manually** (acme.sh HTTP-01 against the docroot,
+   then `uapi SSL install_ssl`). Works, but there is no root cron here, so
+   renewal every 60 days has to be scheduled deliberately or the site breaks.
+4. **Buy a wildcard cert for `*.youngmomins.com`** and install it in cPanel.
+5. **Serve the game from `youngmomins.com/laundry-catcher/` instead**, which the
+   existing cert already covers. This needs a `--exclude=/laundry-catcher/` added
+   to the `young-momins-www` `.cpanel.yml`, or its `rsync --delete` will wipe the
+   directory on that repo's next deploy. It also means rebuilding with
+   `BASE_PATH=/laundry-catcher/` and fixing the hardcoded `/audio/...` paths in
+   `catch.tsx`, `song.tsx`, `credits.tsx` and `settings.tsx`.
+
+### Once a certificate is in place
+
+1. Uncomment the three `RewriteCond`/`RewriteRule` HTTPS lines in `public/.htaccess`.
+2. Change the `<link rel="canonical">` and `og:url` in `index.html` back to `https://`.
+3. `npm run build && git add -A && git commit && git push both main`.
