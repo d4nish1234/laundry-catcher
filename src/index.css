@@ -107,14 +107,6 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-@keyframes fly-across {
-  0% { left: -40%; transform: rotate(-10deg) translateY(0) scale(0.8); }
-  25% { transform: rotate(5deg) translateY(-30px) scale(1); }
-  50% { transform: rotate(-5deg) translateY(0) scale(1.1); }
-  75% { transform: rotate(10deg) translateY(-20px) scale(0.9); }
-  100% { left: 140%; transform: rotate(-10deg) translateY(0) scale(0.8); }
-}
-
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }

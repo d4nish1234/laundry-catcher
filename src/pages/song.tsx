@@ -1,28 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAudio } from '@/hooks/use-audio';
 import { Play, Square, Music as MusicIcon } from 'lucide-react';
+import { LYRICS as lyrics } from '@/data/song';
 import { AUDIO } from '@/lib/assets';
-
-interface Lyric {
-  time: number;
-  text: string;
-  /** Triggers the full-screen flash. Nothing sets it on the current song. */
-  isSpecial?: boolean;
-}
-
-// Cue times match theme-song.mp3, whose music runs 0.15s - 34.20s (file is
-// 35.97s). The previous recording was longer and had two further cues, at 35s
-// and 42s; both are dropped because the current song has no lyrics there — 35s
-// would land in the trailing silence and 42s is past the end of the file.
-const lyrics: Lyric[] = [
-  { time: 0, text: "Packing our bags for a journey so grand" },
-  { time: 5, text: "Through sacred cities, hand in hand" },
-  { time: 10, text: "From white travel cloths to water flasks" },
-  { time: 14, text: "Finding every wonder for our journey tasks" },
-  { time: 20, text: "Laundry Catchers, we're on our way" },
-  { time: 25, text: "Through hotel hallways every day" },
-  { time: 30, text: "Laundry Catchers, with joyful hearts aglow" },
-];
 
 export default function SongScreen() {
   const { play, stop, isPlaying, audio } = useAudio(AUDIO.themeSong);

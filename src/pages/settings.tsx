@@ -10,8 +10,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useAudio } from '@/hooks/use-audio';
-import { CREATURES } from '@/data/creatures';
-import { DiscoveryArtwork } from '@/components/discovery-artwork';
 import { resetDex } from '@/lib/game-engine';
 import { resetStoryState } from '@/lib/story-engine';
 import { isDebugCatchRate100, setDebugCatchRate100 } from '@/lib/debug';
@@ -28,20 +26,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
 import { AUDIO } from '@/lib/assets';
-
-type Lyric = { time: number; text: string; isSpecial?: boolean };
-
-const LYRICS: Lyric[] = [
-  { time: 0,  text: "Packing our bags for a journey so grand..." },
-  { time: 5,  text: "Through the holy cities, hand in hand!" },
-  { time: 10, text: "From Ihram Cloths to Zamzam Flasks," },
-  { time: 14, text: "Finding every item for our Umrah tasks!" },
-  { time: 20, text: "LAUNDRY CATCHERS! We're on our way!" },
-  { time: 25, text: "Through the hotel lobbies every day!" },
-  { time: 30, text: "Laundry Catchers, through Madinah's glow, whoa-oh~" },
-  { time: 35, text: "A special card appears, oh oh oh!" },
-  { time: 42, text: "MASHALLAH!", isSpecial: true },
-];
+import { LYRICS, type Lyric } from '@/data/song';
 
 function SongCard() {
   const { play, stop, isPlaying, audio } = useAudio(AUDIO.themeSong);
@@ -86,21 +71,6 @@ function SongCard() {
       {showFlash && (
         <div className="absolute inset-0 z-10 bg-white/20 animate-flash pointer-events-none rounded-2xl" />
       )}
-
-      {isPlaying &&
-        CREATURES.slice(0, 5).map((c, i) => (
-          <DiscoveryArtwork
-            key={c.id}
-            discovery={c}
-            decorative
-            className="absolute w-10 h-10 text-[0.42rem] opacity-20 fly-across pointer-events-none select-none"
-            style={{
-              top: `${10 + i * 18}%`,
-              animationDelay: `${i * 1.1}s`,
-              animationDuration: `${12 + i * 2}s`,
-            }}
-          />
-        ))}
 
       <div className="relative z-5 p-4 flex items-center gap-4">
         <button
