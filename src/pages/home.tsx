@@ -35,6 +35,21 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
       </div>
 
+      {/* Legibility scrim. The title lands squarely on the glowing HOTEL sign,
+          which is the brightest part of the artwork, so the white and amber
+          lettering was washing out. A soft radial pool of darkness sits between
+          the art and the text — localised rather than a flat overlay, so the
+          skyline and laundry line still read around the edges. */}
+      <div
+        aria-hidden
+        data-title-scrim
+        className="pointer-events-none absolute inset-0 z-[5]"
+        style={{
+          background:
+            'radial-gradient(ellipse 72% 34% at 50% 43%, rgba(2,6,23,0.88) 0%, rgba(2,6,23,0.74) 42%, rgba(2,6,23,0.34) 68%, rgba(2,6,23,0) 86%)',
+        }}
+      />
+
       <button
         onClick={toggle}
         title={isMuted ? 'Unmute music' : 'Mute music'}
