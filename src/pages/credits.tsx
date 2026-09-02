@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useAudio } from '@/hooks/use-audio';
 import { useMusic } from '@/context/music-context';
+import { AUDIO } from '@/lib/assets';
 
 const CREDITS: { role: string; name: string }[] = [
   { role: 'A Buddy Production', name: '' },
@@ -25,7 +26,7 @@ const ANIM = `credits-scroll ${SCROLL_SECONDS}s linear forwards`;
 export default function CreditsPage() {
   const [, navigate] = useLocation();
   const { stop, play } = useMusic();
-  const { play: playSong, stop: stopSong } = useAudio('/audio/theme-song.mp3');
+  const { play: playSong, stop: stopSong } = useAudio(AUDIO.themeSong);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleDone = () => {

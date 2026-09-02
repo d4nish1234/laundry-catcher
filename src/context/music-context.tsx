@@ -15,6 +15,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { AUDIO } from '@/lib/assets';
 
 interface MusicContextValue {
   isPlaying: boolean;
@@ -34,8 +35,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-    const audio = new Audio(`${baseUrl}/audio/acapella.mp3`);
+    const audio = new Audio(AUDIO.acapella);
     audio.loop = true;
     audio.volume = 0.65;
     audioRef.current = audio;

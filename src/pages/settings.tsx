@@ -27,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
+import { AUDIO } from '@/lib/assets';
 
 type Lyric = { time: number; text: string; isSpecial?: boolean };
 
@@ -43,7 +44,7 @@ const LYRICS: Lyric[] = [
 ];
 
 function SongCard() {
-  const { play, stop, isPlaying, audio } = useAudio('/audio/theme-song.mp3');
+  const { play, stop, isPlaying, audio } = useAudio(AUDIO.themeSong);
   const [activeLyric, setActiveLyric] = useState<Lyric>(LYRICS[0]);
   const [showFlash, setShowFlash] = useState(false);
   const flashPlayed = useRef(false);

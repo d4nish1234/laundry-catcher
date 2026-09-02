@@ -29,6 +29,24 @@ import locationCourtyard from '@/assets/locations/courtyard.svg';
 import locationTower from '@/assets/locations/tower.svg';
 import locationSkyline from '@/assets/locations/skyline.svg';
 
+// ── Audio ────────────────────────────────────────────────────────────────────
+// Imported, NOT referenced as /audio/*.mp3 from public/. Files in public/ keep a
+// stable URL, and the production .htaccess serves .mp3 with
+// `max-age=31536000, immutable` — so replacing a track in place left every
+// returning visitor pinned to the old one for a year. Importing makes Vite
+// fingerprint the filename, so a new recording gets a new URL automatically.
+import audioThemeSong from '@/assets/audio/theme-song.mp3';
+import audioAcapella from '@/assets/audio/acapella.mp3';
+import audioCatchTheme from '@/assets/audio/catch-theme.mp3';
+import audioCatchThemeB from '@/assets/audio/catch-theme-b.mp3';
+
+export const AUDIO = {
+  themeSong: audioThemeSong,
+  acapella: audioAcapella,
+  catchTheme: audioCatchTheme,
+  catchThemeB: audioCatchThemeB,
+};
+
 // ── Story character portraits ────────────────────────────────────────────────
 import charHamza from '@/assets/characters/hamza.png';
 import charEnayah from '@/assets/characters/enayah.png';

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAudio } from '@/hooks/use-audio';
 import { Play, Square, Music as MusicIcon } from 'lucide-react';
+import { AUDIO } from '@/lib/assets';
 
 interface Lyric {
   time: number;
@@ -24,7 +25,7 @@ const lyrics: Lyric[] = [
 ];
 
 export default function SongScreen() {
-  const { play, stop, isPlaying, audio } = useAudio('/audio/theme-song.mp3');
+  const { play, stop, isPlaying, audio } = useAudio(AUDIO.themeSong);
   
   const [activeLyric, setActiveLyric] = useState(lyrics[0]);
   const [showFlash, setShowFlash] = useState(false);

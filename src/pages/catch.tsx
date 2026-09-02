@@ -14,6 +14,7 @@ import { DiscoveryArtwork } from '@/components/discovery-artwork';
 import { useMusic } from '@/context/music-context';
 import { playClothespinPull, playItemFound, playRopeCast } from '@/lib/sound-fx';
 import { ArrowLeft, Lock, Unlock, ChevronRight, Compass, Waves, RotateCcw } from 'lucide-react';
+import { AUDIO } from '@/lib/assets';
 
 type CatchState = 'card' | 'revealing' | 'readyToCast' | 'casting' | 'waiting' | 'pulling' | 'result';
 
@@ -66,9 +67,8 @@ export default function CatchScreen() {
   useEffect(() => {
     stop();
     const THEME_B_LOCATIONS = new Set(['madinah-courtyard', 'makkah-skyline']);
-    const themeFile = THEME_B_LOCATIONS.has(locationId ?? '') ? '/audio/catch-theme-b.mp3' : '/audio/catch-theme.mp3';
-    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-    const seaAudio = new Audio(`${baseUrl}${themeFile}`);
+    const themeFile = THEME_B_LOCATIONS.has(locationId ?? '') ? AUDIO.catchThemeB : AUDIO.catchTheme;
+    const seaAudio = new Audio(themeFile);
     seaAudio.loop = true;
     seaAudio.volume = 0.65;
     seaAudio.play().catch(() => {});

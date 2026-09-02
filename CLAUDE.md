@@ -62,8 +62,8 @@ src/
     story/           — holy-site photographs used as scene backgrounds
     characters/      — character sticker portraits
     locations/       — generic hotel artwork, hand-authored SVG
+    audio/           — theme song, catch themes, acapella loop
 public/
-  audio/             — theme song, catch themes, acapella loop
   .htaccess          — HTTPS, SPA fallback, cache headers (ships to the docroot)
 ```
 
@@ -116,9 +116,14 @@ public/
 - `isSceneSeen()` inside `isLocationUnlocked()` reads `localStorage` directly, not
   React state — intentional, so the hook stays synchronous. The journey screen
   re-renders via `useStory` state updates.
-- Audio under `public/audio/` is referenced by absolute URL. `music-context.tsx`
-  resolves it through `import.meta.env.BASE_URL`; the other call sites hardcode
-  `/audio/...`, which is fine only while the site is served from a domain root.
+- **Audio must be imported, never put in `public/`.** Every track lives in
+  `src/assets/audio/` and is exported from `AUDIO` in `src/lib/assets.ts`, so
+  Vite fingerprints the filename. This is not cosmetic: `public/.htaccess` serves
+  `.mp3` with `max-age=31536000, immutable`, and files in `public/` keep a stable
+  URL — so replacing a track in place left every returning visitor pinned to the
+  old recording for a year, with no way to bust it. Importing means a new
+  recording gets a new URL automatically. Dropping an mp3 into `public/audio/`
+  reintroduces the bug silently.
 
 ## Pointers
 
