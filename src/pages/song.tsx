@@ -1,19 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAudio } from '@/hooks/use-audio';
-import { CREATURES } from '@/data/creatures';
-import { DiscoveryArtwork } from '@/components/discovery-artwork';
 import { Play, Square, Music as MusicIcon } from 'lucide-react';
 
-const lyrics = [
-  { time: 0, text: "Packing our bags for a journey so grand..." },
-  { time: 5, text: "Through the holy cities, hand in hand!" },
-  { time: 10, text: "From Ihram Cloths to Zamzam Flasks," },
-  { time: 14, text: "Finding every item for our Umrah tasks!" },
-  { time: 20, text: "LAUNDRY CATCHERS! We're on our way!" },
-  { time: 25, text: "Through the hotel lobbies every day!" },
-  { time: 30, text: "Laundry Catchers, through Madinah's glow, whoa-oh~" },
-  { time: 35, text: "A special card appears, oh oh oh!" },
-  { time: 42, text: "MASHALLAH!", isSpecial: true },
+interface Lyric {
+  time: number;
+  text: string;
+  /** Triggers the full-screen flash. Nothing sets it on the current song. */
+  isSpecial?: boolean;
+}
+
+// Cue times match theme-song.mp3, whose music runs 0.15s - 34.20s (file is
+// 35.97s). The previous recording was longer and had two further cues, at 35s
+// and 42s; both are dropped because the current song has no lyrics there — 35s
+// would land in the trailing silence and 42s is past the end of the file.
+const lyrics: Lyric[] = [
+  { time: 0, text: "Packing our bags for a journey so grand" },
+  { time: 5, text: "Through sacred cities, hand in hand" },
+  { time: 10, text: "From white travel cloths to water flasks" },
+  { time: 14, text: "Finding every wonder for our journey tasks" },
+  { time: 20, text: "Laundry Catchers, we're on our way" },
+  { time: 25, text: "Through hotel hallways every day" },
+  { time: 30, text: "Laundry Catchers, with joyful hearts aglow" },
 ];
 
 export default function SongScreen() {
@@ -57,26 +64,6 @@ export default function SongScreen() {
       <div className="absolute inset-0 z-0">
         <div className={`w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] transition-colors duration-1000 ${isPlaying ? 'from-primary/30 via-slate-900 to-black' : 'from-slate-800 via-slate-900 to-black'}`} />
       </div>
-
-      {isPlaying && CREATURES.map((c, i) => {
-        const top = 10 + (i * 15) + '%';
-        const delay = i * 0.7 + 's';
-        const duration = 8 + (i % 3) * 4 + 's';
-        
-        return (
-          <DiscoveryArtwork
-            key={c.id}
-            discovery={c}
-            decorative
-            className="absolute z-10 w-24 h-24 text-sm opacity-40 fly-across"
-            style={{
-              top,
-              animationDelay: delay,
-              animationDuration: duration,
-            }}
-          />
-        );
-      })}
 
       {showFlash && (
         <div className="absolute inset-0 z-40 bg-white animate-flash flex items-center justify-center mix-blend-overlay pointer-events-none">
