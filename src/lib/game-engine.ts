@@ -33,10 +33,21 @@ function saveDexState(state: DexState): void {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-export function rollDiscovery(locationId: string): Discovery {
+/**
+ * Pick the item a laundry card points at.
+ *
+ * Always targets something the player has not caught yet, so hunting a card is
+ * progress rather than a re-roll of things already in the dex. Once every item
+ * in the location is caught there is nothing new left, so it falls back to the
+ * full local pool and picks any of them.
+ */
+export function rollDiscovery(locationId: string, dex?: DexState): Discovery {
   const locationItems = getCreaturesForLocation(locationId);
   const pool = locationItems.length > 0 ? locationItems : CREATURES;
-  const picked = pool[Math.floor(Math.random() * pool.length)];
+  const state = dex ?? loadDexState();
+  const undiscovered = pool.filter((item) => !isCaught(state, item.id));
+  const choices = undiscovered.length > 0 ? undiscovered : pool;
+  const picked = choices[Math.floor(Math.random() * choices.length)];
   return picked ?? CREATURES[0];
 }
 
@@ -51,7 +62,7 @@ export interface LaundryPullResult {
  * Resolve a pull independently from the card target.
  * A pull can return the pictured item, another local item, or an empty clip.
  */
-export function resolveLaundryPull(expected: Discovery): LaundryPullResult {
+export function resolveLaundryPull(expected: Discovery, dex?: DexState): LaundryPullResult {
   if (isDebugCatchRate100()) {
     return { outcome: 'expected', discovery: expected };
   }
@@ -66,9 +77,15 @@ export function resolveLaundryPull(expected: Discovery): LaundryPullResult {
       (item) => item.id !== expected.id,
     );
     if (alternatives.length > 0) {
+      // Same odds as before — this only changes WHICH alternative surfaces.
+      // Prefer one the player has not caught, so a surprise still moves the dex
+      // forward instead of handing back a duplicate.
+      const state = dex ?? loadDexState();
+      const fresh = alternatives.filter((item) => !isCaught(state, item.id));
+      const choices = fresh.length > 0 ? fresh : alternatives;
       return {
         outcome: 'different',
-        discovery: alternatives[Math.floor(Math.random() * alternatives.length)],
+        discovery: choices[Math.floor(Math.random() * choices.length)],
       };
     }
   }

@@ -46,7 +46,7 @@ and [docs/GIT-REMOTES.md](docs/GIT-REMOTES.md).
 ```
 src/
   data/
-    creatures.ts     — 24 discoverable items (6 per location)
+    creatures.ts     — 23 discoverable items (Gateway has 5, the rest 6)
     locations.ts     — the 4 locations, unlock chain + storyGate fields
     story.ts         — visual-novel scene definitions
     journey.ts       — ordered sequence of story Day cards + locations
@@ -78,6 +78,13 @@ public/
 - **`LocationId` is `string`.** Adding a location never means touching types.
 - **`isNew` badge** in the catch screen is snapshotted at encounter-roll time, not
   recomputed reactively, so it cannot vanish mid-encounter.
+- **Cards always point at something new.** `rollDiscovery()` filters the location
+  pool down to items with no `caughtAt`, so hunting a card is progress rather
+  than a re-roll of the dex. Only when a location is fully caught does it fall
+  back to the whole pool. `resolveLaundryPull()` biases its "different" result
+  the same way — the odds are unchanged, only *which* alternative surfaces.
+- **Casting auto-pulls.** Cast → wait for the tug → pull happens on its own.
+  There is no "Pull the rope!" tap and no `readyToPull` state.
 - **Journey screen, not a location grid.** `/locations` renders a vertical
   timeline mixing story Day cards and location cards, ordered by `JOURNEY` in
   `journey.ts`. Add a new `{ kind: 'day', ... }` entry anywhere in that array and
@@ -93,6 +100,13 @@ public/
 5. Add a `{ kind: 'location', ... }` entry to `JOURNEY` in `journey.ts`.
 
 ## Gotchas
+
+- **Tailwind v4 emits translate utilities as the standalone `translate` CSS
+  property, not `transform`.** So `-translate-x-1/2` stacks *on top of* any
+  `transform` a keyframe sets rather than being overridden by it. If an
+  animation's keyframes already contain `translate(-50%,-50%)` for centring (as
+  `card-to-sea` does), adding the utilities offsets the element by half its own
+  width and height. Pick one or the other, never both.
 
 - Layout hides the bottom nav and music toggle on `/story/*`. Any new full-screen
   overlay needs the same `isStoryRoute` check in `layout.tsx`.

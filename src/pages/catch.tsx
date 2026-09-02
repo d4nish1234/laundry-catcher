@@ -15,7 +15,7 @@ import { useMusic } from '@/context/music-context';
 import { playClothespinPull, playItemFound, playRopeCast } from '@/lib/sound-fx';
 import { ArrowLeft, Lock, Unlock, ChevronRight, Compass, Waves, RotateCcw } from 'lucide-react';
 
-type CatchState = 'card' | 'revealing' | 'readyToCast' | 'casting' | 'waiting' | 'readyToPull' | 'pulling' | 'result';
+type CatchState = 'card' | 'revealing' | 'readyToCast' | 'casting' | 'waiting' | 'pulling' | 'result';
 
 export default function CatchScreen() {
   const [match, params] = useRoute('/catch/:locationId');
@@ -107,7 +107,7 @@ export default function CatchScreen() {
   const handleRevealCard = () => {
     cancelPendingSequence();
     const token = sequenceToken.current;
-    const nextExpectedItem = rollDiscovery(currentLocation.id);
+    const nextExpectedItem = rollDiscovery(currentLocation.id, dexState);
     setExpectedItem(nextExpectedItem);
     setFoundItem(null);
     setOutcome(null);
@@ -118,30 +118,13 @@ export default function CatchScreen() {
     }, 1700);
   };
 
-  const handleCast = () => {
-    if (!expectedItem) return;
-    cancelPendingSequence();
-    const token = sequenceToken.current;
-    setState('casting');
-    setFoundItem(null);
-    setOutcome(null);
-    playRopeCast();
-
-    schedule(token, () => {
-      setState('waiting');
-      schedule(token, () => {
-        setState('readyToPull');
-      }, 1600);
-    }, 700);
-  };
-
-  const handlePull = () => {
-    if (!expectedItem) return;
-    cancelPendingSequence();
-    const token = sequenceToken.current;
+  // The pull used to be a second tap ("Pull the rope!"). It now runs on its own
+  // once the tug lands, so casting is a single action. Takes the token and item
+  // explicitly because it is called from inside an already-scheduled callback.
+  const runPull = (token: number, item: Discovery) => {
     setState('pulling');
     playClothespinPull();
-    const result = resolveLaundryPull(expectedItem);
+    const result = resolveLaundryPull(item, dexState);
 
     schedule(token, () => {
       setOutcome(result.outcome);
@@ -151,13 +134,29 @@ export default function CatchScreen() {
         markCaught(result.discovery);
         playItemFound();
         if (result.outcome === 'different') {
-          markAttempt(expectedItem);
+          markAttempt(item);
         }
       } else {
-        markAttempt(expectedItem);
+        markAttempt(item);
       }
       setState('result');
     }, 1000);
+  };
+
+  const handleCast = () => {
+    if (!expectedItem) return;
+    cancelPendingSequence();
+    const token = sequenceToken.current;
+    const item = expectedItem;
+    setState('casting');
+    setFoundItem(null);
+    setOutcome(null);
+    playRopeCast();
+
+    schedule(token, () => {
+      setState('waiting');
+      schedule(token, () => runPull(token, item), 1600);
+    }, 700);
   };
 
   const handleAnotherCard = () => {
@@ -259,9 +258,14 @@ export default function CatchScreen() {
           </div>
         )}
 
-        {/* The card reveals the target, then the pictured item sinks away. */}
+        {/* The card reveals the target, then the pictured item sinks away.
+            No -translate-x/y-1/2 on the card: Tailwind v4 emits those as the
+            standalone `translate` property, which stacks on top of the transform
+            inside the card-to-sea keyframes. Those keyframes already carry
+            translate(-50%,-50%), so the utilities offset the card by half its own
+            width and height. */}
         {state === 'revealing' && expectedItem && (
-          <div className="absolute left-1/2 top-[43%] z-40 w-56 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-4 border-amber-400 bg-card p-4 text-center shadow-2xl animate-card-to-sea">
+          <div className="absolute left-1/2 top-[43%] z-40 w-56 rounded-2xl border-4 border-amber-400 bg-card p-4 text-center shadow-2xl animate-card-to-sea">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-400">Find this item</p>
             <DiscoveryArtwork discovery={expectedItem} className="mx-auto mt-2 h-28 w-28 text-[1.1rem]" decorative />
             <h3 className="mt-2 font-display text-xl font-bold text-card-foreground">{expectedItem.name}</h3>
@@ -269,11 +273,10 @@ export default function CatchScreen() {
         )}
 
         {/* Rope & Charm */}
-        {(state === 'casting' || state === 'waiting' || state === 'readyToPull' || state === 'pulling') && (
+        {(state === 'casting' || state === 'waiting' || state === 'pulling') && (
           <div className={`absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center transition-all ease-in-out z-30
             ${state === 'casting' ? 'translate-y-[25vh] duration-700' : ''}
             ${state === 'waiting' ? 'translate-y-[25vh] animate-bob duration-100' : ''}
-            ${state === 'readyToPull' ? 'translate-y-[25vh] animate-bob duration-100' : ''}
             ${state === 'pulling' ? '-translate-y-[15vh] duration-1000' : ''}
           `}>
             <div className="w-1 h-[40vh] bg-amber-700/80 rounded-full" />
@@ -288,7 +291,7 @@ export default function CatchScreen() {
           <div className="absolute bottom-[29%] left-1/2 z-40 w-[min(20rem,calc(100%-2rem))] -translate-x-1/2 rounded-xl border border-white/10 bg-black/60 px-4 py-3 text-center backdrop-blur-md animate-in slide-in-from-bottom">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-300">The card showed</p>
             <p className="mt-1 font-display text-xl font-bold text-primary">{expectedItem.name}</p>
-            <p className="mt-1 text-xs text-slate-300">Cast the clothespin, wait for a tug, then pull.</p>
+            <p className="mt-1 text-xs text-slate-300">Cast the clothespin and wait for a tug.</p>
           </div>
         )}
 
@@ -298,9 +301,11 @@ export default function CatchScreen() {
             <div className="absolute inset-0 bg-amber-500/10 mix-blend-overlay" />
             {foundItem ? (
               <>
-                <p className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">
-                  {outcome === 'expected' ? 'The card was right' : 'A surprise came back'}
-                </p>
+                {outcome === 'different' && (
+                  <p className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">
+                    A surprise came back
+                  </p>
+                )}
                 <DiscoveryArtwork discovery={foundItem} className="relative z-10 h-28 w-28 text-[1.1rem] animate-float" />
                 <h3 className="relative z-10 mt-2 font-display text-2xl font-bold text-card-foreground">{foundItem.name}</h3>
                 <p className="relative z-10 mb-4 mt-1 text-xs italic text-muted-foreground">"{foundItem.tagline}"</p>
@@ -342,10 +347,6 @@ export default function CatchScreen() {
         ) : state === 'readyToCast' ? (
           <button onClick={handleCast} className="w-full py-4 bg-blue-500 text-white rounded-2xl font-bold text-lg uppercase tracking-wider shadow-[0_6px_0_#1e3a8a] active:translate-y-2 transition-all hover:-translate-y-1">
             Cast Rope &amp; Clothespin
-          </button>
-        ) : state === 'readyToPull' ? (
-          <button onClick={handlePull} className="w-full py-4 bg-cyan-500 text-slate-950 rounded-2xl font-black text-xl uppercase tracking-wider shadow-[0_6px_0_#155e75] active:translate-y-2 transition-all animate-pulse">
-            Pull the rope!
           </button>
         ) : state === 'result' ? (
           <div className="w-full flex flex-col gap-3">
