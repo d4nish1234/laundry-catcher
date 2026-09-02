@@ -1,10 +1,11 @@
 /**
  * Theme song lyrics — the single source of truth.
  *
- * Two screens display these: the full Song screen (`pages/song.tsx`) and the
- * compact player on Settings (`pages/settings.tsx`). They each used to carry
- * their own copy, which silently went out of sync the moment the song was
- * rewritten. Import from here instead of pasting a second list.
+ * Displayed by the compact player on Settings (`pages/settings.tsx`). There was
+ * a second, unlinked /song screen with its own duplicate copy of this list; the
+ * two silently went out of sync when the song was rewritten, and that screen has
+ * since been removed. If another player is ever added, import from here rather
+ * than pasting a second list.
  *
  * Cue times match `assets/audio/theme-song.mp3`, whose music runs 0.15s-34.20s
  * (the file is 35.97s). Any cue past ~34s would land in the trailing silence.

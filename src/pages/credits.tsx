@@ -25,7 +25,7 @@ const ANIM = `credits-scroll ${SCROLL_SECONDS}s linear forwards`;
 
 export default function CreditsPage() {
   const [, navigate] = useLocation();
-  const { stop, play } = useMusic();
+  const { stop, play, isMuted } = useMusic();
   const { play: playSong, stop: stopSong } = useAudio(AUDIO.themeSong);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +37,9 @@ export default function CreditsPage() {
 
   useEffect(() => {
     stop();
-    playSong();
+    // Respect the global mute — this roll used to start the theme song even
+    // when the player had muted everything.
+    if (!isMuted) playSong();
 
     // Force-restart the CSS animation regardless of any previously cached state.
     // Removing the animation, triggering a reflow, then reapplying it is the
@@ -95,7 +97,7 @@ export default function CreditsPage() {
             The End
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Hamza &amp; Enayah's Umrah Adventure
+            Journey to Umrah
           </p>
         </div>
 

@@ -30,10 +30,11 @@ export default function CatchScreen() {
   const [outcome, setOutcome] = useState<LaundryPullOutcome | null>(null);
   const [isNew, setIsNew] = useState(false);
   const pendingTimers = useRef<number[]>([]);
+  const seaAudioRef = useRef<HTMLAudioElement | null>(null);
   const sequenceToken = useRef(0);
 
   const { markCaught, markAttempt, state: dexState, caughtCountForLocation } = useLaundryDex();
-  const { play, stop } = useMusic();
+  const { play, stop, isMuted } = useMusic();
 
   const cancelPendingSequence = () => {
     sequenceToken.current += 1;
@@ -71,14 +72,29 @@ export default function CatchScreen() {
     const seaAudio = new Audio(themeFile);
     seaAudio.loop = true;
     seaAudio.volume = 0.65;
-    seaAudio.play().catch(() => {});
+    seaAudioRef.current = seaAudio;
+    // Playback is started by the mute effect below, not here — this screen used
+    // to play unconditionally, so arriving on it restarted music the player had
+    // already muted elsewhere.
     return () => {
       seaAudio.pause();
       seaAudio.currentTime = 0;
+      seaAudioRef.current = null;
       play();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Honour the mute preference, including when it is toggled while on-screen.
+  useEffect(() => {
+    const seaAudio = seaAudioRef.current;
+    if (!seaAudio) return;
+    if (isMuted) {
+      seaAudio.pause();
+    } else {
+      seaAudio.play().catch(() => {});
+    }
+  }, [isMuted]);
 
   if (!currentLocation) return null;
 

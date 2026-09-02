@@ -8,7 +8,6 @@ import Layout from '@/components/layout';
 import Home from '@/pages/home';
 import CatchScreen from '@/pages/catch';
 import DexScreen from '@/pages/dex';
-import SongScreen from '@/pages/song';
 import LocationsScreen from '@/pages/locations';
 import StoryPage from '@/pages/story';
 import SettingsScreen from '@/pages/settings';
@@ -27,7 +26,6 @@ function Router() {
         <Route path="/story/:eventId" component={StoryPage} />
         <Route path="/settings" component={SettingsScreen} />
         <Route path="/dex" component={DexScreen} />
-        <Route path="/song" component={SongScreen} />
         <Route path="/credits" component={CreditsPage} />
         <Route component={NotFound} />
       </Switch>
