@@ -93,7 +93,7 @@ public/
 ## Adding a location
 
 1. Add an entry to `LOCATIONS` in `src/data/locations.ts` (order drives UI order).
-2. Point `unlockedBy` at the immediately preceding location id, threshold 5.
+2. Point `unlockedBy` at the immediately preceding location id, threshold 3.
 3. Add 6 items tagged with the new location id in `src/data/creatures.ts`.
 4. Draw generic SVG art into `src/assets/locations/`, import it in
    `src/lib/assets.ts`, and add it to `LOCATION_IMAGES`.

@@ -85,7 +85,7 @@ export const JOURNEY: JourneyItem[] = [
 
   // ── Locations (unlock via story gate then discovery counts) ──────────────
   // catchesRequiredToAdvance gates the story days that follow.
-  { kind: 'location', locationId: 'madinah-gateway', catchesRequiredToAdvance: 5 },
+  { kind: 'location', locationId: 'madinah-gateway', catchesRequiredToAdvance: 3 },
 
   // ── Day 3 ──────────────────────────────────────────────────────────────
   {
@@ -123,7 +123,7 @@ export const JOURNEY: JourneyItem[] = [
     eventIds: ['rawdah-salaam', 'rawdah-friends', 'courtyard-card'],
   },
 
-  { kind: 'location', locationId: 'madinah-courtyard', catchesRequiredToAdvance: 5 },
+  { kind: 'location', locationId: 'madinah-courtyard', catchesRequiredToAdvance: 3 },
 
   // ── Day 6 · Part 1 ─────────────────────────────────────────────────────
   {
@@ -174,7 +174,7 @@ export const JOURNEY: JourneyItem[] = [
     eventIds: ['after-tawaf-prayer', 'tower-card'],
   },
 
-  { kind: 'location', locationId: 'makkah-tower', catchesRequiredToAdvance: 5 },
+  { kind: 'location', locationId: 'makkah-tower', catchesRequiredToAdvance: 3 },
 
   // ── Day 7 ──────────────────────────────────────────────────────────────
   {

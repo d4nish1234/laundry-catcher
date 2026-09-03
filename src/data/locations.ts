@@ -3,8 +3,8 @@
 // ─── HOW TO ADD A NEW LOCATION ────────────────────────────────────────────
 // 1. Add a new entry to LOCATIONS below (keep the order: it drives UI order).
 // 2. Set `unlockedBy` to the immediately preceding location's id with the
-//    project-wide threshold (currently 5). This creates a linear unlock
-//    chain: players must discover 5 unique items from hotel N before
+//    project-wide threshold (currently 3). This creates a linear unlock
+//    chain: players must discover 3 unique items from hotel N before
 //    hotel N+1 opens. The first location never has `unlockedBy`.
 // 3. Add travel items tagged with the new location's id in creatures.ts.
 // 4. Add a background image entry in assets.ts under LOCATION_IMAGES.
@@ -35,7 +35,7 @@ export interface Location {
    * so the chain is linear (Gateway → Courtyard → Tower → Skyline → …).
    *
    * Example for a new 5th location:
-   *   unlockedBy: { locationId: 'makkah-skyline', uniqueCatchesRequired: 5 }
+   *   unlockedBy: { locationId: 'makkah-skyline', uniqueCatchesRequired: 3 }
    */
   unlockedBy?: {
     locationId: string;
@@ -61,7 +61,7 @@ export const LOCATIONS: Location[] = [
     tagline: 'Striped arches and fresh linen',
     description:
       'Beneath the Courtyard\'s striped stone archways, another set of laundry cards waits among the scent of oud and freshly pressed linen.',
-    unlockedBy: { locationId: 'madinah-gateway', uniqueCatchesRequired: 5 },
+    unlockedBy: { locationId: 'madinah-gateway', uniqueCatchesRequired: 3 },
   },
   {
     id: 'makkah-tower',
@@ -71,7 +71,7 @@ export const LOCATIONS: Location[] = [
     description:
       'Behind the ornate mashrabiya lattice and the soft glow of the Tower\'s chandeliers, each card points toward a useful garment or travel keepsake.',
     storyGate: 'tower-card',
-    unlockedBy: { locationId: 'madinah-courtyard', uniqueCatchesRequired: 5 },
+    unlockedBy: { locationId: 'madinah-courtyard', uniqueCatchesRequired: 3 },
   },
   {
     id: 'makkah-skyline',
@@ -81,7 +81,7 @@ export const LOCATIONS: Location[] = [
     description:
       'Framed by the Skyline\'s soaring gold geometric archway, the final cards drift through a calm Laundry Sea of crisp folds and precise patterns.',
     storyGate: 'journey-home',
-    unlockedBy: { locationId: 'makkah-tower', uniqueCatchesRequired: 5 },
+    unlockedBy: { locationId: 'makkah-tower', uniqueCatchesRequired: 3 },
   },
 ];
 
